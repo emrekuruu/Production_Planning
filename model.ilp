@@ -3,13 +3,26 @@
 Minimize
  
 Subject To
- Position_Order_2_4: - position[2] + position[4] - 6 is_next[2,4] = -5
- Position_Order_4_2: position[2] - position[4] - 6 is_next[4,2] = -5
+ Order_Binary_3_5: order[3,5] + order[5,3] = 1
+ Order_Binary_3_8: order[3,8] + order[8,3] = 1
+ Order_Binary_3_10: order[3,10] + order[10,3] = 1
+ Order_Binary_5_10: order[5,10] + order[10,5] = 1
+ Order_Binary_8_10: order[8,10] + order[10,8] = 1
+ Single_Successor_3: order[3,1] + order[3,2] + order[3,4] + order[3,5]
+   + order[3,6] + order[3,7] + order[3,8] + order[3,9] + order[3,10] = 1
+ Single_Successor_5: order[5,1] + order[5,2] + order[5,3] + order[5,4]
+   + order[5,6] + order[5,7] + order[5,8] + order[5,9] + order[5,10] = 1
+ Single_Successor_8: order[8,1] + order[8,2] + order[8,3] + order[8,4]
+   + order[8,5] + order[8,6] + order[8,7] + order[8,9] + order[8,10] = 1
+ Single_Successor_10: order[10,1] + order[10,2] + order[10,3] + order[10,4]
+   + order[10,5] + order[10,6] + order[10,7] + order[10,8] + order[10,9]
+   = 1
 Bounds
- position[2] free
- position[4] free
 Binaries
- is_next[2,4] is_next[4,2]
-Generals
- position[2] position[4]
+ order[3,1] order[3,2] order[3,4] order[3,5] order[3,6] order[3,7]
+ order[3,8] order[3,9] order[3,10] order[5,1] order[5,2] order[5,3]
+ order[5,4] order[5,6] order[5,7] order[5,8] order[5,9] order[5,10]
+ order[8,1] order[8,2] order[8,3] order[8,4] order[8,5] order[8,6]
+ order[8,7] order[8,9] order[8,10] order[10,1] order[10,2] order[10,3]
+ order[10,4] order[10,5] order[10,6] order[10,7] order[10,8] order[10,9]
 End
