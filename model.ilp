@@ -1,0 +1,15 @@
+\ Model PaintingProcessOptimization_copy
+\ LP format - for model browsing. Use MPS format to capture full model detail.
+Minimize
+ 
+Subject To
+ Position_Order_2_4: - position[2] + position[4] - 6 is_next[2,4] = -5
+ Position_Order_4_2: position[2] - position[4] - 6 is_next[4,2] = -5
+Bounds
+ position[2] free
+ position[4] free
+Binaries
+ is_next[2,4] is_next[4,2]
+Generals
+ position[2] position[4]
+End
