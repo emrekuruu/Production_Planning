@@ -23,25 +23,51 @@ This project uses Gurobi to optimize the painting process for a set of parts, ai
 minimize ∑ color_cost[parts_colors[p]] * color_change[p, q]
 
 ### Constraints
+
 1. **Successor Constraints**:
-   - Each part can have at most one immediate successor.
-   - Each part can have at most one immediate predecessor.
-   - Only one part is allowed without a successor (end part).
+   - Each part can have at most one immediate successor:
+     ```
+     ∑_{q ≠ p} successor[p, q] ≤ 1,  ∀ p
+     ```
+   - Each part can have at most one immediate predecessor:
+     ```
+     ∑_{p ≠ q} successor[p, q] ≤ 1,  ∀ q
+     ```
+   - There must be exactly one part without a successor:
+     ```
+     ∑_{p} ∑_{q ≠ p} successor[p, q] = num_parts - 1
+     ```
 
 2. **Mutual Exclusivity**:
-   - For each pair of parts `(p, p')`, one must precede the other.
+   - For each pair of parts `(p, p')`, one must precede the other:
+     ```
+     order[p, p'] + order[p', p] = 1, ∀ p ≠ p'
+     ```
 
 3. **Order-Successor Link**:
-   - Links `order` and `successor` variables such that if part `p` is the successor of part `p'`, then `p'` must come before `p`.
+   - If part `p` is the successor of part `p'`, then `p'` must come before `p` in the sequence:
+     ```
+     order[p', p] ≥ successor[p, p'], ∀ p ≠ p'
+     ```
 
 4. **Color Change**:
-   - Adds a cost whenever there is a color change between successive parts.
+   - Add a cost whenever there is a color change between successive parts:
+     ```
+     color_change[p, p'] ≥ successor[p, p'], if parts_colors[p] ≠ parts_colors[p'], ∀ p ≠ p'
+     ```
 
 5. **Demand Fulfillment**:
-   - Ensures that each part meets its demand.
+   - Each part must meet its demand:
+     ```
+     (end_times[p] - start_times[p]) * unit_production_time[p] ≥ demand[p], ∀ p
+     ```
 
 6. **No Overlap**:
-   - If part `p` is scheduled before part `p'`, then `end_times[p] <= start_times[p']`.
+   - If part `p` is scheduled before part `p'`, then:
+     ```
+     end_times[p] ≤ start_times[p'] + (1 - order[p, p']) * M, ∀ p ≠ p'
+     ```
+   where `M` is a large constant.
 
 ### Implementation Details
 - The model is built and optimized using Gurobi, with optional parameters such as `IntFeasTol` and `Threads` for improved performance.
