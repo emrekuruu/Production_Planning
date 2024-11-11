@@ -3,26 +3,56 @@
 Minimize
  
 Subject To
- Order_Binary_3_5: order[3,5] + order[5,3] = 1
- Order_Binary_3_8: order[3,8] + order[8,3] = 1
- Order_Binary_3_10: order[3,10] + order[10,3] = 1
- Order_Binary_5_10: order[5,10] + order[10,5] = 1
- Order_Binary_8_10: order[8,10] + order[10,8] = 1
- Single_Successor_3: order[3,1] + order[3,2] + order[3,4] + order[3,5]
-   + order[3,6] + order[3,7] + order[3,8] + order[3,9] + order[3,10] = 1
- Single_Successor_5: order[5,1] + order[5,2] + order[5,3] + order[5,4]
-   + order[5,6] + order[5,7] + order[5,8] + order[5,9] + order[5,10] = 1
- Single_Successor_8: order[8,1] + order[8,2] + order[8,3] + order[8,4]
-   + order[8,5] + order[8,6] + order[8,7] + order[8,9] + order[8,10] = 1
- Single_Successor_10: order[10,1] + order[10,2] + order[10,3] + order[10,4]
-   + order[10,5] + order[10,6] + order[10,7] + order[10,8] + order[10,9]
+ Combined_Machine_Assignment_12_15_Machine_1: - machine_assignment[12,1]
+   - machine_assignment[15,1] + same_machine[12,15,1] >= -1
+ Same_Machine_Assignment_p_14_Machine_1: - machine_assignment[14,1]
+   + same_machine[14,12,1] <= 0
+ Combined_Machine_Assignment_14_12_Machine_1: - machine_assignment[12,1]
+   - machine_assignment[14,1] + same_machine[14,12,1] >= -1
+ Same_Machine_Assignment_p_14_Machine_2: - machine_assignment[14,2]
+   + same_machine[14,12,2] <= 0
+ Combined_Machine_Assignment_14_12_Machine_2: - machine_assignment[12,2]
+   - machine_assignment[14,2] + same_machine[14,12,2] >= -1
+ Same_Machine_Assignment_p_14_Machine_2: - machine_assignment[14,2]
+   + same_machine[14,15,2] <= 0
+ Combined_Machine_Assignment_14_15_Machine_2: - machine_assignment[14,2]
+   - machine_assignment[15,2] + same_machine[14,15,2] >= -1
+ Same_Machine_Assignment_p_prime_12_Machine_1: - machine_assignment[12,1]
+   + same_machine[15,12,1] <= 0
+ Same_Machine_Assignment_p_15_Machine_2: - machine_assignment[15,2]
+   + same_machine[15,12,2] <= 0
+ Combined_Machine_Assignment_15_12_Machine_2: - machine_assignment[12,2]
+   - machine_assignment[15,2] + same_machine[15,12,2] >= -1
+ Same_Machine_Assignment_p_prime_14_Machine_1: - machine_assignment[14,1]
+   + same_machine[15,14,1] <= 0
+ Combined_Machine_Assignment_15_14_Machine_1: - machine_assignment[14,1]
+   - machine_assignment[15,1] + same_machine[15,14,1] >= -1
+ Order_Binary_12_15_Machine_1: order[12,15] + order[15,12]
+   - same_machine[12,15,1] = 0
+ Order_Binary_14_12_Machine_1: order[12,14] + order[14,12]
+   - same_machine[14,12,1] = 0
+ Order_Binary_14_12_Machine_2: order[12,14] + order[14,12]
+   - same_machine[14,12,2] = 0
+ Order_Binary_14_15_Machine_2: order[14,15] + order[15,14]
+   - same_machine[14,15,2] = 0
+ Order_Binary_15_12_Machine_1: order[12,15] + order[15,12]
+   - same_machine[15,12,1] = 0
+ Order_Binary_15_12_Machine_2: order[12,15] + order[15,12]
+   - same_machine[15,12,2] = 0
+ Order_Binary_15_14_Machine_1: order[14,15] + order[15,14]
+   - same_machine[15,14,1] = 0
+ Machine_Assignment_12: machine_assignment[12,1] + machine_assignment[12,2]
+   = 1
+ Machine_Assignment_14: machine_assignment[14,1] + machine_assignment[14,2]
+   = 1
+ Machine_Assignment_15: machine_assignment[15,1] + machine_assignment[15,2]
    = 1
 Bounds
 Binaries
- order[3,1] order[3,2] order[3,4] order[3,5] order[3,6] order[3,7]
- order[3,8] order[3,9] order[3,10] order[5,1] order[5,2] order[5,3]
- order[5,4] order[5,6] order[5,7] order[5,8] order[5,9] order[5,10]
- order[8,1] order[8,2] order[8,3] order[8,4] order[8,5] order[8,6]
- order[8,7] order[8,9] order[8,10] order[10,1] order[10,2] order[10,3]
- order[10,4] order[10,5] order[10,6] order[10,7] order[10,8] order[10,9]
+ order[12,14] order[12,15] order[14,12] order[14,15] order[15,12]
+ order[15,14] machine_assignment[12,1] machine_assignment[12,2]
+ machine_assignment[14,1] machine_assignment[14,2] machine_assignment[15,1]
+ machine_assignment[15,2] same_machine[12,15,1] same_machine[14,12,1]
+ same_machine[14,12,2] same_machine[14,15,2] same_machine[15,12,1]
+ same_machine[15,12,2] same_machine[15,14,1]
 End
