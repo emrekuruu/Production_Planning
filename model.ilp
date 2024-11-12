@@ -3,56 +3,133 @@
 Minimize
  
 Subject To
- Combined_Machine_Assignment_12_15_Machine_1: - machine_assignment[12,1]
-   - machine_assignment[15,1] + same_machine[12,15,1] >= -1
- Same_Machine_Assignment_p_14_Machine_1: - machine_assignment[14,1]
-   + same_machine[14,12,1] <= 0
- Combined_Machine_Assignment_14_12_Machine_1: - machine_assignment[12,1]
-   - machine_assignment[14,1] + same_machine[14,12,1] >= -1
- Same_Machine_Assignment_p_14_Machine_2: - machine_assignment[14,2]
-   + same_machine[14,12,2] <= 0
- Combined_Machine_Assignment_14_12_Machine_2: - machine_assignment[12,2]
-   - machine_assignment[14,2] + same_machine[14,12,2] >= -1
- Same_Machine_Assignment_p_14_Machine_2: - machine_assignment[14,2]
-   + same_machine[14,15,2] <= 0
- Combined_Machine_Assignment_14_15_Machine_2: - machine_assignment[14,2]
-   - machine_assignment[15,2] + same_machine[14,15,2] >= -1
- Same_Machine_Assignment_p_prime_12_Machine_1: - machine_assignment[12,1]
-   + same_machine[15,12,1] <= 0
- Same_Machine_Assignment_p_15_Machine_2: - machine_assignment[15,2]
-   + same_machine[15,12,2] <= 0
- Combined_Machine_Assignment_15_12_Machine_2: - machine_assignment[12,2]
-   - machine_assignment[15,2] + same_machine[15,12,2] >= -1
- Same_Machine_Assignment_p_prime_14_Machine_1: - machine_assignment[14,1]
-   + same_machine[15,14,1] <= 0
- Combined_Machine_Assignment_15_14_Machine_1: - machine_assignment[14,1]
-   - machine_assignment[15,1] + same_machine[15,14,1] >= -1
- Order_Binary_12_15_Machine_1: order[12,15] + order[15,12]
-   - same_machine[12,15,1] = 0
- Order_Binary_14_12_Machine_1: order[12,14] + order[14,12]
-   - same_machine[14,12,1] = 0
- Order_Binary_14_12_Machine_2: order[12,14] + order[14,12]
-   - same_machine[14,12,2] = 0
- Order_Binary_14_15_Machine_2: order[14,15] + order[15,14]
-   - same_machine[14,15,2] = 0
- Order_Binary_15_12_Machine_1: order[12,15] + order[15,12]
-   - same_machine[15,12,1] = 0
- Order_Binary_15_12_Machine_2: order[12,15] + order[15,12]
-   - same_machine[15,12,2] = 0
- Order_Binary_15_14_Machine_1: order[14,15] + order[15,14]
-   - same_machine[15,14,1] = 0
- Machine_Assignment_12: machine_assignment[12,1] + machine_assignment[12,2]
+ Demand_Fulfillment_2: - start_times[2] + end_times[2] >= 70
+ Demand_Fulfillment_4: - start_times[4] + end_times[4] >= 70
+ Demand_Fulfillment_5: - start_times[5] + end_times[5] >= 70
+ Demand_Fulfillment_6: - start_times[6] + end_times[6] >= 70
+ Demand_Fulfillment_10: - start_times[10] + end_times[10] >= 70
+ Machine_Assignment_2: machine_assignment[2,1] + machine_assignment[2,2]
    = 1
- Machine_Assignment_14: machine_assignment[14,1] + machine_assignment[14,2]
+ Machine_Assignment_4: machine_assignment[4,1] + machine_assignment[4,2]
    = 1
- Machine_Assignment_15: machine_assignment[15,1] + machine_assignment[15,2]
+ Machine_Assignment_5: machine_assignment[5,1] + machine_assignment[5,2]
    = 1
+ Machine_Assignment_6: machine_assignment[6,1] + machine_assignment[6,2]
+   = 1
+ Machine_Assignment_10: machine_assignment[10,1] + machine_assignment[10,2]
+   = 1
+ No_Overlap_Same_Machine_2_4_Machine_1: - start_times[4] + end_times[2]
+   + 1e+06 order[2,4,1] <= 1e+06
+ No_Overlap_Same_Machine_2_5_Machine_1: - start_times[5] + end_times[2]
+   + 1e+06 order[2,5,1] <= 1e+06
+ No_Overlap_Same_Machine_2_6_Machine_1: - start_times[6] + end_times[2]
+   + 1e+06 order[2,6,1] <= 1e+06
+ No_Overlap_Same_Machine_2_6_Machine_2: - start_times[6] + end_times[2]
+   + 1e+06 order[2,6,2] <= 1e+06
+ No_Overlap_Same_Machine_2_10_Machine_1: - start_times[10] + end_times[2]
+   + 1e+06 order[2,10,1] <= 1e+06
+ No_Overlap_Same_Machine_2_10_Machine_2: - start_times[10] + end_times[2]
+   + 1e+06 order[2,10,2] <= 1e+06
+ No_Overlap_Same_Machine_4_2_Machine_1: - start_times[2] + end_times[4]
+   + 1e+06 order[4,2,1] <= 1e+06
+ No_Overlap_Same_Machine_4_5_Machine_2: - start_times[5] + end_times[4]
+   + 1e+06 order[4,5,2] <= 1e+06
+ No_Overlap_Same_Machine_4_6_Machine_1: - start_times[6] + end_times[4]
+   + 1e+06 order[4,6,1] <= 1e+06
+ No_Overlap_Same_Machine_4_10_Machine_1: - start_times[10] + end_times[4]
+   + 1e+06 order[4,10,1] <= 1e+06
+ No_Overlap_Same_Machine_5_2_Machine_1: - start_times[2] + end_times[5]
+   + 1e+06 order[5,2,1] <= 1e+06
+ No_Overlap_Same_Machine_5_4_Machine_2: - start_times[4] + end_times[5]
+   + 1e+06 order[5,4,2] <= 1e+06
+ No_Overlap_Same_Machine_5_6_Machine_1: - start_times[6] + end_times[5]
+   + 1e+06 order[5,6,1] <= 1e+06
+ No_Overlap_Same_Machine_5_10_Machine_1: - start_times[10] + end_times[5]
+   + 1e+06 order[5,10,1] <= 1e+06
+ No_Overlap_Same_Machine_6_2_Machine_1: - start_times[2] + end_times[6]
+   + 1e+06 order[6,2,1] <= 1e+06
+ No_Overlap_Same_Machine_6_2_Machine_2: - start_times[2] + end_times[6]
+   + 1e+06 order[6,2,2] <= 1e+06
+ No_Overlap_Same_Machine_6_4_Machine_1: - start_times[4] + end_times[6]
+   + 1e+06 order[6,4,1] <= 1e+06
+ No_Overlap_Same_Machine_6_5_Machine_1: - start_times[5] + end_times[6]
+   + 1e+06 order[6,5,1] <= 1e+06
+ No_Overlap_Same_Machine_6_10_Machine_1: - start_times[10] + end_times[6]
+   + 1e+06 order[6,10,1] <= 1e+06
+ No_Overlap_Same_Machine_6_10_Machine_2: - start_times[10] + end_times[6]
+   + 1e+06 order[6,10,2] <= 1e+06
+ No_Overlap_Same_Machine_10_2_Machine_1: - start_times[2] + end_times[10]
+   + 1e+06 order[10,2,1] <= 1e+06
+ No_Overlap_Same_Machine_10_2_Machine_2: - start_times[2] + end_times[10]
+   + 1e+06 order[10,2,2] <= 1e+06
+ No_Overlap_Same_Machine_10_4_Machine_1: - start_times[4] + end_times[10]
+   + 1e+06 order[10,4,1] <= 1e+06
+ No_Overlap_Same_Machine_10_5_Machine_1: - start_times[5] + end_times[10]
+   + 1e+06 order[10,5,1] <= 1e+06
+ No_Overlap_Same_Machine_10_6_Machine_1: - start_times[6] + end_times[10]
+   + 1e+06 order[10,6,1] <= 1e+06
+ No_Overlap_Same_Machine_10_6_Machine_2: - start_times[6] + end_times[10]
+   + 1e+06 order[10,6,2] <= 1e+06
+ Max_Time_Machine_A_2: end_times[2] + 1e+06 machine_assignment[2,1]
+   <= 1.0002e+06
+ Max_Time_Machine_A_4: end_times[4] + 1e+06 machine_assignment[4,1]
+   <= 1.0002e+06
+ Max_Time_Machine_A_5: end_times[5] + 1e+06 machine_assignment[5,1]
+   <= 1.0002e+06
+ Max_Time_Machine_A_6: end_times[6] + 1e+06 machine_assignment[6,1]
+   <= 1.0002e+06
+ Max_Time_Machine_A_10: end_times[10] + 1e+06 machine_assignment[10,1]
+   <= 1.0002e+06
+ Max_Time_Machine_A_2: end_times[2] + 1e+06 machine_assignment[2,2]
+   <= 1.00013e+06
+ Max_Time_Machine_A_4: end_times[4] + 1e+06 machine_assignment[4,2]
+   <= 1.00013e+06
+ Max_Time_Machine_A_5: end_times[5] + 1e+06 machine_assignment[5,2]
+   <= 1.00013e+06
+ Max_Time_Machine_A_6: end_times[6] + 1e+06 machine_assignment[6,2]
+   <= 1.00013e+06
+ Max_Time_Machine_A_10: end_times[10] + 1e+06 machine_assignment[10,2]
+   <= 1.00013e+06
+ Order_Binary_2_6_Machine_1: order[2,6,1] + order[6,2,1] + [
+   - machine_assignment[2,1] * machine_assignment[6,1] ] = 0
+ Order_Binary_2_6_Machine_2: order[2,6,2] + order[6,2,2] + [
+   - machine_assignment[2,2] * machine_assignment[6,2] ] = 0
+ Order_Binary_2_10_Machine_1: order[2,10,1] + order[10,2,1] + [
+   - machine_assignment[2,1] * machine_assignment[10,1] ] = 0
+ Order_Binary_4_2_Machine_1: order[2,4,1] + order[4,2,1] + [
+   - machine_assignment[2,1] * machine_assignment[4,1] ] = 0
+ Order_Binary_4_6_Machine_1: order[4,6,1] + order[6,4,1] + [
+   - machine_assignment[4,1] * machine_assignment[6,1] ] = 0
+ Order_Binary_4_10_Machine_1: order[4,10,1] + order[10,4,1] + [
+   - machine_assignment[4,1] * machine_assignment[10,1] ] = 0
+ Order_Binary_5_2_Machine_1: order[2,5,1] + order[5,2,1] + [
+   - machine_assignment[2,1] * machine_assignment[5,1] ] = 0
+ Order_Binary_5_4_Machine_2: order[4,5,2] + order[5,4,2] + [
+   - machine_assignment[4,2] * machine_assignment[5,2] ] = 0
+ Order_Binary_5_6_Machine_1: order[5,6,1] + order[6,5,1] + [
+   - machine_assignment[5,1] * machine_assignment[6,1] ] = 0
+ Order_Binary_5_10_Machine_1: order[5,10,1] + order[10,5,1] + [
+   - machine_assignment[5,1] * machine_assignment[10,1] ] = 0
+ Order_Binary_6_10_Machine_2: order[6,10,2] + order[10,6,2] + [
+   - machine_assignment[6,2] * machine_assignment[10,2] ] = 0
+ Order_Binary_10_2_Machine_2: order[2,10,2] + order[10,2,2] + [
+   - machine_assignment[2,2] * machine_assignment[10,2] ] = 0
+ Order_Binary_10_6_Machine_1: order[6,10,1] + order[10,6,1] + [
+   - machine_assignment[6,1] * machine_assignment[10,1] ] = 0
 Bounds
+ end_times[2] free
+ end_times[4] free
+ end_times[5] free
+ end_times[6] free
+ end_times[10] free
 Binaries
- order[12,14] order[12,15] order[14,12] order[14,15] order[15,12]
- order[15,14] machine_assignment[12,1] machine_assignment[12,2]
- machine_assignment[14,1] machine_assignment[14,2] machine_assignment[15,1]
- machine_assignment[15,2] same_machine[12,15,1] same_machine[14,12,1]
- same_machine[14,12,2] same_machine[14,15,2] same_machine[15,12,1]
- same_machine[15,12,2] same_machine[15,14,1]
+ order[2,4,1] order[2,5,1] order[2,6,1] order[2,6,2] order[2,10,1]
+ order[2,10,2] order[4,2,1] order[4,5,2] order[4,6,1] order[4,10,1]
+ order[5,2,1] order[5,4,2] order[5,6,1] order[5,10,1] order[6,2,1]
+ order[6,2,2] order[6,4,1] order[6,5,1] order[6,10,1] order[6,10,2]
+ order[10,2,1] order[10,2,2] order[10,4,1] order[10,5,1] order[10,6,1]
+ order[10,6,2] machine_assignment[2,1] machine_assignment[2,2]
+ machine_assignment[4,1] machine_assignment[4,2] machine_assignment[5,1]
+ machine_assignment[5,2] machine_assignment[6,1] machine_assignment[6,2]
+ machine_assignment[10,1] machine_assignment[10,2]
 End
