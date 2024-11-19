@@ -3,15 +3,23 @@
 Minimize
  
 Subject To
- Single_predecessor_12_Machine_1: 2 predecessor[12,1,1]
-   + 2 predecessor[12,2,1] + 2 predecessor[12,3,1] + 2 predecessor[12,4,1]
-   + 2 predecessor[12,5,1] + 2 predecessor[12,6,1] + 2 predecessor[12,7,1]
-   + 2 predecessor[12,8,1] + 2 predecessor[12,9,1] + 2 predecessor[12,10,1]
-   = 1
+ Cleaning_Time_2_10_Machine_2: start_times[2,2] - start_times[10,2]
+   + 2000 predecessor[2,10,2] <= -2080
+ Cleaning_Time_6_7_Machine_2: start_times[6,2] - start_times[7,2]
+   + 2000 predecessor[6,7,2] <= -2080
+ Cleaning_Time_7_9_Machine_2: start_times[7,2] - start_times[9,2]
+   + 2000 predecessor[7,9,2] <= -2080
+ Cleaning_Time_9_2_Machine_2: - start_times[2,2] + start_times[9,2]
+   + 2000 predecessor[9,2,2] <= -2080
+ Cleaning_Time_10_6_Machine_2: - start_times[6,2] + start_times[10,2]
+   + 2000 predecessor[10,6,2] <= -2080
 Bounds
+ start_times[2,2] free
+ start_times[6,2] free
+ start_times[7,2] free
+ start_times[9,2] free
+ start_times[10,2] free
 Binaries
- predecessor[12,1,1] predecessor[12,2,1] predecessor[12,3,1]
- predecessor[12,4,1] predecessor[12,5,1] predecessor[12,6,1]
- predecessor[12,7,1] predecessor[12,8,1] predecessor[12,9,1]
- predecessor[12,10,1]
+ predecessor[2,10,2] predecessor[6,7,2] predecessor[7,9,2]
+ predecessor[9,2,2] predecessor[10,6,2]
 End
