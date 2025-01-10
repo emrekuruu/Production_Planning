@@ -1,9 +1,9 @@
 import gurobipy as gp
 from gurobipy import GRB, quicksum
 import random
-import os
 from abc import ABC, abstractmethod
-
+import time 
+import random
 class BaseModel(ABC):
     def __init__(self, num_parts=10, group_length=2, max_time_machine_A=28000, max_time_machine_B=19000):
         self.num_parts = num_parts
@@ -130,16 +130,25 @@ class BaseModel(ABC):
     def __call__(self):
         model = self.create_model()
         model.setParam("IntFeasTol", 1e-9)
-        model.setParam("Threads", 8) 
-        self.optimize(model)
-        return model
+        model.setParam("Threads", 8)
+        
+        start_time = time.time()
+        self.optimization_metadata = self.optimize(model)
+        end_time = time.time()
+        
+        optimization_time = end_time - start_time
+        return model, optimization_time
     
     @abstractmethod
     def optimize(self, model):
         pass
 
-
 class No_Heuristic(BaseModel):
     def optimize(self, model):
         model.optimize()
         return model
+    
+class TabuSearch(BaseModel):
+    def optimize(self, model):
+        # TODO: Implement the Tabu Search optimization algorithm
+        pass
