@@ -227,8 +227,8 @@ class Optimizer():
         max_time_B = self.max_time_machine_B
 
         for m in self.machines:
-            ax = axs[m - 1]  # Subplot for each machine
-            cumulative_shift = 0  # Track cumulative shifts for breaks
+            ax = axs[m - 1] 
+            cumulative_shift = 0  #
 
             sorted_parts = sorted(
                 [p for p in range(1, self.num_parts + 1)],
@@ -264,13 +264,14 @@ class Optimizer():
                         shifted_end += shift_amount
 
                 ax.barh(p, shifted_end - shifted_start, left=shifted_start, color=part_color, edgecolor='black')
+                ax.text((start + end) / 2, p, f'Type {p}', ha='center', va='center', color='white')
 
             if m == 1:
                 ax.axvline(x=max_time_A, color='red', linestyle='--', alpha=0.8, linewidth=1.5, label="Max Time A")
-                ax.legend(loc='upper left')
+                ax.legend(loc='upper right')
             elif m == 2:
                 ax.axvline(x=max_time_B, color='red', linestyle='--', alpha=0.8, linewidth=1.5, label="Max Time B")
-                ax.legend(loc='upper left')
+                ax.legend(loc='upper right')
 
             ax.set_title(f"Machine {m} Schedule", fontsize=16)
             ax.set_ylabel("Product Type", fontsize=14)
