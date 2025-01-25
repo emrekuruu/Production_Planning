@@ -59,10 +59,10 @@ class Optimizer():
         big_M = self.max_time_machine_A
 
         # Dummy part constraints
-        model.addConstr(quicksum(self.predecessor[12, p, 1] for p in range(1, self.num_parts + 1)) == 1, 
-                        name="Dummy_12_Predecessor_Machine_1")
-        model.addConstr(quicksum(self.predecessor[11, p, 2] for p in range(1, self.num_parts + 1)) == 1, 
-                        name="Dummy_11_Predecessor_Machine_2")
+        model.addConstr(quicksum(self.predecessor[len(self.parts_colors)+1, p, 1] for p in range(1, self.num_parts + 1)) == 1, 
+                        name="Dummy_Predecessor_Machine_1")
+        model.addConstr(quicksum(self.predecessor[len(self.parts_colors)+2, p, 2] for p in range(1, self.num_parts + 1)) == 1, 
+                        name="Dummy_Predecessor_Machine_2")
 
         # self.predecessor constraints
         for p in range(1, self.num_parts + 1):
@@ -127,28 +127,43 @@ class Optimizer():
         return model
 
     def _set_initial_solution(self, initial_solution):
-        # Set initial values for start_times
-        for machine in self.machines:
-            if machine in initial_solution:
-                for job in initial_solution[machine]:
-                    part, start_time, _ = job
-                    self.start_times[part, machine].Start = start_time
+        # 1) Reset all starts to 0 (optional, if not done elsewhere)
+        for (p, m) in self.start_times.keys():
+            self.start_times[p, m].Start = 0
+        for (pA, pB, m) in self.predecessor.keys():
+            self.predecessor[pA, pB, m].Start = 0
 
-        # Set initial values for predecessor
-        for machine in self.machines:
-            if machine in initial_solution:
-                jobs = initial_solution[machine]
-                for i in range(1, len(jobs)):
-                    prev_part = jobs[i-1][0]
-                    curr_part = jobs[i][0]
-                    self.predecessor[prev_part, curr_part, machine].Start = 1
+        # 2) Fill in the user-given schedule
+        for m, job_list in initial_solution.items():
+            job_list_sorted = sorted(job_list, key=lambda x: x[1])
+            for (part, start_time, end_time) in job_list_sorted:
+                self.start_times[part, m].Start = start_time
+
+            for i in range(len(job_list_sorted) - 1):
+                prev_part = job_list_sorted[i][0]
+                next_part = job_list_sorted[i+1][0]
+                self.predecessor[prev_part, next_part, m].Start = 1
+
+        # 3) Now assign dummy → first job for each machine
+        dummy_1 = len(self.parts_colors) + 1  # Dummy for Machine 1
+        dummy_2 = len(self.parts_colors) + 2  # Dummy for Machine 2
+
+        # Machine 1
+        if 1 in initial_solution and initial_solution[1]:
+            first_job = sorted(initial_solution[1], key=lambda x: x[1])[0]
+            self.predecessor[dummy_1, first_job[0], 1].Start = 1
+
+        # Machine 2
+        if 2 in initial_solution and initial_solution[2]:
+            first_job = sorted(initial_solution[2], key=lambda x: x[1])[0]
+            self.predecessor[dummy_2, first_job[0], 2].Start = 1
+
 
     def __call__(self, initial_solution=None):
         model = self.create_model()
         model.setParam("IntFeasTol", 1e-9)
         model.setParam("Threads", 8)
 
-        # If an initial solution is provided, set the initial values for the variables
         if initial_solution is not None:
             self._set_initial_solution(initial_solution)
 
