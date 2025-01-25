@@ -7,6 +7,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os 
 
+random.seed(42)
+np.random.seed(42)
+
 os.environ["GRB_LICENSE_FILE"] = "/Users/emrekuru/Developer/Production_Planning/gurobi.lic"
 
 class Optimizer():
@@ -163,6 +166,8 @@ class Optimizer():
         model = self.create_model()
         model.setParam("IntFeasTol", 1e-9)
         model.setParam("Threads", 8)
+        model.setParam("Seed", 12345)
+        model.setParam("MIPGap", 0.05)
 
         if initial_solution is not None:
             self._set_initial_solution(initial_solution)
