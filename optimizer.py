@@ -13,7 +13,7 @@ np.random.seed(42)
 os.environ["GRB_LICENSE_FILE"] = "/Users/emrekuru/Developer/Production_Planning/gurobi.lic"
 
 class Optimizer():
-    def __init__(self, num_parts, group_length, max_time_machine_A, max_time_machine_B, demand, parts_colors, alpha, unit_production_time, cleaning_time):
+    def __init__(self, num_parts, group_length, max_time_machine_A, max_time_machine_B, demand, parts_colors, alpha, unit_production_time, cleaning_time, machines):
         self.num_parts = num_parts
         self.group_length = group_length
         self.max_time_machine_A = max_time_machine_A
@@ -23,7 +23,7 @@ class Optimizer():
         self.alpha = alpha
         self.unit_production_time = unit_production_time
         self.cleaning_time = cleaning_time
-        self.machines = [1, 2]
+        self.machines = machines
 
     def _assign_colors(self):
         parts_colors = {}
@@ -204,7 +204,7 @@ class Optimizer():
 
             raise Exception("Model is infeasible. Check the IIS output for more details.")
 
-        return model, optimization_time
+        return model, model.ObjVal, optimization_time
     
     def optimize(self, model):
         model.optimize()

@@ -10,13 +10,12 @@ np.random.seed(42)
 
 class BaseScheduler(ABC):
     def __init__(self, num_parts, group_length, max_time_machine_A, max_time_machine_B,
-                 demand, color_cost, parts_colors, alpha, unit_production_time, 
+                 demand, parts_colors, alpha, unit_production_time, 
                  cleaning_time, machines):
         self.num_parts = num_parts
         self.group_length = group_length
         self.max_times = {1: max_time_machine_A, 2: max_time_machine_B}
         self.demand = demand
-        self.color_cost = color_cost
         self.parts_colors = parts_colors
         self.alpha = alpha
         self.unit_production_time = unit_production_time
