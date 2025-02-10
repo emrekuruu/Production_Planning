@@ -13,9 +13,9 @@ np.random.seed(42)
 os.environ["GRB_LICENSE_FILE"] = "/Users/emrekuru/Developer/Production_Planning/gurobi.lic"
 
 class Optimizer():
-    def __init__(self, num_parts, group_length, max_time_machine_A, max_time_machine_B, demand, parts_colors, alpha, unit_production_time, cleaning_time, machines):
+    def __init__(self, num_parts, max_time_machine_A, max_time_machine_B, demand, parts_colors, alpha, unit_production_time, cleaning_time, machines, MIPGAP = 0.01):
+        self.MIPGAP = MIPGAP
         self.num_parts = num_parts
-        self.group_length = group_length
         self.max_time_machine_A = max_time_machine_A
         self.max_time_machine_B = max_time_machine_B
         self.demand = demand
@@ -24,16 +24,6 @@ class Optimizer():
         self.unit_production_time = unit_production_time
         self.cleaning_time = cleaning_time
         self.machines = machines
-
-    def _assign_colors(self):
-        parts_colors = {}
-        for i in range(1, self.num_parts + 1, self.group_length):
-            color = random.choice(list(self.color_cost.keys()))
-            while color in parts_colors.values():
-                color = random.choice(list(self.color_cost.keys()))
-            for j in range(self.group_length):
-                parts_colors[i + j] = color
-        return parts_colors
 
     def _compute_alpha(self):
         return [[abs(1 - (self.parts_colors[p] == self.parts_colors[q])) 
@@ -162,12 +152,16 @@ class Optimizer():
             self.predecessor[dummy_2, first_job[0], 2].Start = 1
 
 
-    def __call__(self, initial_solution=None):
+    def __call__(self, initial_solution=None, verbose=True):
         model = self.create_model()
+        
+        if not verbose:
+            model.setParam('OutputFlag', 0)
+        
         model.setParam("IntFeasTol", 1e-9)
         model.setParam("Threads", 8)
         model.setParam("Seed", 12345)
-        model.setParam("MIPGap", 0.05)
+        model.setParam("MIPGap", self.MIPGAP)
 
         if initial_solution is not None:
             self._set_initial_solution(initial_solution)
@@ -181,14 +175,14 @@ class Optimizer():
         # Check the number of quadratic constraints and non-zero quadratic terms in the objective
         num_quadratic_constraints = model.getAttr("NumQConstrs")  # Number of quadratic constraints
         num_quadratic_obj_terms = model.getAttr("NumQNZs")       # Number of non-zero quadratic terms in the objective
-
-        # Print the results to confirm linearity
-        print("Number of quadratic constraints:", num_quadratic_constraints)
-        print("Number of quadratic objective terms:", num_quadratic_obj_terms)
-
         # Check if the model is MILP based on the absence of quadratic terms
         is_milp = num_quadratic_constraints == 0 and num_quadratic_obj_terms == 0 and model.getAttr("IsMIP")
-        print("Model is MILP:", bool(is_milp))
+
+        # Print the results to confirm linearity
+        if verbose:
+            print("Number of quadratic constraints:", num_quadratic_constraints) 
+            print("Number of quadratic objective terms:", num_quadratic_obj_terms)
+            print("Model is MILP:", bool(is_milp))
 
         # Check if the model is infeasible
         if model.status == GRB.INFEASIBLE:
@@ -232,17 +226,6 @@ class Optimizer():
 
         fig, axs = plt.subplots(2, 1, figsize=(22, 12), sharex=True)
 
-        color_map = {
-            'Red': 'red',
-            'Blue': 'blue',
-            'Green': 'green',
-            'Yellow': 'yellow',
-            'Black': 'black',
-            'Purple': 'purple',
-            'Orange': 'orange',
-            'Pink': 'pink',
-        }
-
         max_time_A = self.max_time_machine_A
         max_time_B = self.max_time_machine_B
 
@@ -256,7 +239,7 @@ class Optimizer():
             )
 
             for p in sorted_parts:
-                part_color = color_map[self.parts_colors[p]]
+                part_color = self.parts_colors[p]
                 start = start_times_values[(p, m)]
                 end = end_times_values[(p, m)]
 
