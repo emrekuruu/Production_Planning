@@ -6,11 +6,12 @@ import random
 import matplotlib.pyplot as plt
 import numpy as np
 import os 
+import os 
 
 random.seed(42)
 np.random.seed(42)
 
-os.environ["GRB_LICENSE_FILE"] = "/Users/emrekuru/Developer/Production_Planning/gurobi.lic"
+os.environ["GRB_LICENSE_FILE"] = os.path.join(os.path.dirname(__file__), "gurobi.lic")
 
 class Optimizer():
     def __init__(self, num_parts, max_time_machine_A, max_time_machine_B, demand, parts_colors, alpha, unit_production_time, cleaning_time, machines, MIPGAP = 0.01):
