@@ -80,7 +80,7 @@ class BaseScheduler(ABC):
 
     def visualize(self, interval = 4000):
         cleaned = self.add_cleaning_times(self.schedule) if self.type == "Tabu Search" else self.schedule
-        fig, axs = plt.subplots(2, 1, figsize=(18, 10), sharex=True)
+        fig, axs = plt.subplots(2, 1, figsize=(22, 12), sharex=True)
         machine_labels = ['Machine 1 Schedule', 'Machine 2 Schedule']
         max_time = max(self.max_times.values())
 

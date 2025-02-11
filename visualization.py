@@ -92,27 +92,34 @@ def bar_graph(results_df):
 
 
 def parameter_line_graph(results_df):    
-    unique_varieties = sorted(results_df['Color Variety'].unique())
+    unique_varieties = sorted(results_df['Number of Parts'].unique())
     num_subplots = len(unique_varieties)
     
-    fig, axes = plt.subplots(1, num_subplots, figsize=(18, 6))
+    cols = 5
+    rows = 3
+    
+    fig, axes = plt.subplots(rows, cols, figsize=(28, 20))
+    axes = axes.flatten()  # Flatten the 2D array of axes for easier indexing
     
     for idx, variety in enumerate(unique_varieties):
-        data = results_df[results_df['Color Variety'] == variety]
-        
-        sns.lineplot(
-            data=data, 
-            x='Number of Parts', 
-            y='Time',
-            marker='o',
-            ax=axes[idx]
-        )
-        
-        axes[idx].set_title(f'Color Variety: {variety}', fontsize=14, pad=15)
-        axes[idx].set_xlabel("Number of Parts", fontsize=12)
-        axes[idx].set_ylabel("Time (s)" if idx == 0 else "", fontsize=12)
-        axes[idx].grid(True, linestyle='--', alpha=0.6)
+        if idx < len(axes):  # Only plot if we have an axis available
+            data = results_df[results_df['Number of Parts'] == variety]
+            
+            sns.lineplot(
+                data=data, 
+                x='Number of Colors', 
+                y='Time',
+                marker='o',
+                ax=axes[idx]
+            )
+            
+            axes[idx].grid(True, linestyle='--', alpha=0.6)
+            axes[idx].set_title(f'Number of Parts: {variety}', pad=10)
     
-    plt.suptitle('Optimization Time vs Number of Parts by Color Variety', fontsize=16, y=1.05)
+    # Hide empty subplots
+    for idx in range(num_subplots, len(axes)):
+        axes[idx].set_visible(False)
+    
+    plt.suptitle('Optimization Time vs Number of Colors by Number of Parts', fontsize=16, y=1.02)
     plt.tight_layout()
     plt.show()

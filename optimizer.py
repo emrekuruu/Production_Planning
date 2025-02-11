@@ -14,9 +14,10 @@ np.random.seed(42)
 os.environ["GRB_LICENSE_FILE"] = os.path.join(os.path.dirname(__file__), "gurobi.lic")
 
 class Optimizer():
-    def __init__(self, num_parts, max_time_machine_A, max_time_machine_B, demand, parts_colors, alpha, unit_production_time, cleaning_time, machines, MIPGAP = 0.01):
+    def __init__(self, num_parts, num_colors, max_time_machine_A, max_time_machine_B, demand, parts_colors, alpha, unit_production_time, cleaning_time, machines, MIPGAP = 0.01):
         self.MIPGAP = MIPGAP
         self.num_parts = num_parts
+        self.num_colors = num_colors
         self.max_time_machine_A = max_time_machine_A
         self.max_time_machine_B = max_time_machine_B
         self.demand = demand
@@ -50,7 +51,9 @@ class Optimizer():
         )
 
         # Constraints
-        big_M = self.max_time_machine_A
+        total_processing_time = sum(self.demand[p] * self.unit_production_time for p in range(1, self.num_parts + 1))
+        total_cleaning_time = self.cleaning_time * (self.num_parts - 1)
+        big_M = total_processing_time + total_cleaning_time
 
         # Dummy part constraints
         model.addConstr(quicksum(self.predecessor[len(self.parts_colors)+1, p, 1] for p in range(1, self.num_parts + 1)) == 1, 
@@ -162,6 +165,7 @@ class Optimizer():
         model.setParam("IntFeasTol", 1e-9)
         model.setParam("Threads", 8)
         model.setParam("Seed", 12345)
+        model.setParam("BestObjStop", (self.num_colors - 1.5))
         model.setParam("MIPGap", self.MIPGAP)
 
         if initial_solution is not None:
@@ -176,6 +180,7 @@ class Optimizer():
         # Check the number of quadratic constraints and non-zero quadratic terms in the objective
         num_quadratic_constraints = model.getAttr("NumQConstrs")  # Number of quadratic constraints
         num_quadratic_obj_terms = model.getAttr("NumQNZs")       # Number of non-zero quadratic terms in the objective
+
         # Check if the model is MILP based on the absence of quadratic terms
         is_milp = num_quadratic_constraints == 0 and num_quadratic_obj_terms == 0 and model.getAttr("IsMIP")
 
