@@ -123,3 +123,32 @@ def parameter_line_graph(results_df):
     plt.suptitle('Optimization Time vs Number of Colors by Number of Parts', fontsize=16, y=1.02)
     plt.tight_layout()
     plt.show()
+
+def box_plot(results_df):
+    sns.set_context("talk", font_scale=1.2)
+
+    plt.figure(figsize=(14, 8))
+
+    # Get unique values in their original order
+    part_numbers = sorted(results_df['Number of Parts'].unique())
+    
+    # Create more aesthetic box plot with white boxes
+    sns.boxplot(
+        data=results_df, 
+        x='Number of Parts', 
+        y='Time',
+        order=part_numbers,
+        palette="husl",
+        width=0.6,
+        medianprops={"color": "red"},
+        flierprops={"marker": "o", "markerfacecolor": "gray", "markersize": 6},
+        boxprops={"alpha": 0.8, "facecolor": "white"}
+    )
+
+    plt.title("Computation Time Distribution by Number of Parts", fontsize=16, pad=15)
+    plt.xlabel("Number of Parts", fontsize=14)
+    plt.ylabel("Time (s)", fontsize=14)
+    plt.grid(True, linestyle='--', alpha=0.6)
+
+    plt.tight_layout()
+    plt.show()

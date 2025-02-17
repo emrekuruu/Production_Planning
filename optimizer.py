@@ -14,12 +14,11 @@ np.random.seed(42)
 os.environ["GRB_LICENSE_FILE"] = os.path.join(os.path.dirname(__file__), "gurobi.lic")
 
 class Optimizer():
-    def __init__(self, num_parts, num_colors, max_time_machine_A, max_time_machine_B, demand, parts_colors, alpha, unit_production_time, cleaning_time, machines, MIPGAP = 0.01):
+    def __init__(self, num_parts, num_colors, max_times, demand, parts_colors, alpha, unit_production_time, cleaning_time, machines, MIPGAP = 0.01):
         self.MIPGAP = MIPGAP
         self.num_parts = num_parts
         self.num_colors = num_colors
-        self.max_time_machine_A = max_time_machine_A
-        self.max_time_machine_B = max_time_machine_B
+        self.max_times = max_times
         self.demand = demand
         self.parts_colors = parts_colors
         self.alpha = alpha
@@ -36,9 +35,10 @@ class Optimizer():
         model = gp.Model("PaintingProcessOptimization")
 
         # Variables
-        self.start_times = model.addVars(range(1, self.num_parts + 3), self.machines, 
+        self.start_times = model.addVars(range(1, self.num_parts + len(self.machines) + 1), self.machines, 
                                     vtype=GRB.CONTINUOUS, name="self.start_times")
-        self.predecessor = model.addVars(range(1, self.num_parts + 3), range(1, self.num_parts + 3), 
+        
+        self.predecessor = model.addVars(range(1, self.num_parts + len(self.machines) + 1), range(1, self.num_parts + len(self.machines) + 1), 
                                      self.machines, vtype=GRB.BINARY, name="self.predecessor")
 
         # Objective
@@ -56,18 +56,20 @@ class Optimizer():
         big_M = total_processing_time + total_cleaning_time
 
         # Dummy part constraints
-        model.addConstr(quicksum(self.predecessor[len(self.parts_colors)+1, p, 1] for p in range(1, self.num_parts + 1)) == 1, 
-                        name="Dummy_Predecessor_Machine_1")
-        model.addConstr(quicksum(self.predecessor[len(self.parts_colors)+2, p, 2] for p in range(1, self.num_parts + 1)) == 1, 
-                        name="Dummy_Predecessor_Machine_2")
+        for m in self.machines:
+            model.addConstr(
+            quicksum(self.predecessor[len(self.parts_colors) + m, p, m] 
+                for p in range(1, self.num_parts + 1)) == 1,
+            name=f"Dummy_Predecessor_Machine_{m}"
+            )
 
         # self.predecessor constraints
         for p in range(1, self.num_parts + 1):
             model.addConstr(
-                quicksum(self.predecessor[q, p, m] for q in range(1, self.num_parts + 3) for m in self.machines if q != p) == 1,
+                quicksum(self.predecessor[q, p, m] for q in range(1, self.num_parts + len(self.machines) + 1) for m in self.machines if q != p) == 1,
                 name=f"Single_predecessor_{p}"
             )
-        for p in range(1, self.num_parts + 3):
+        for p in range(1, self.num_parts + len(self.machines) + 1):
             model.addConstr(
                 quicksum(self.predecessor[p, q, m] for q in range(1, self.num_parts + 1) for m in self.machines if q != p) <= 1,
                 name=f"Single_successor_{p}"
@@ -82,12 +84,12 @@ class Optimizer():
                 if p != q:
                     for m in self.machines:
                         model.addConstr(
-                            quicksum(self.predecessor[r, p, m] for r in range(1, self.num_parts + 3)) >= self.predecessor[p, q, m],
+                            quicksum(self.predecessor[r, p, m] for r in range(1, self.num_parts + len(self.machines) + 1)) >= self.predecessor[p, q, m],
                             name=f"Predecessor_Consistency_{p}_{q}_Machine_{m}"
                         )
 
         # Timing constraints
-        for p in range(1, self.num_parts + 3):
+        for p in range(1, self.num_parts + len(self.machines) + 1):
             for q in range(1, self.num_parts + 1):
                 if p != q:
                     for m in self.machines:
@@ -98,17 +100,13 @@ class Optimizer():
                         )
 
         # Machine time limits
-        for p in range(1, self.num_parts + 1):
-            model.addConstr(
-                self.start_times[p, 1] + self.demand[p] * self.unit_production_time <= 
-                self.max_time_machine_A + big_M * (1 - quicksum(self.predecessor[q, p, 1] for q in range(1, self.num_parts + 3))),
-                name=f"Max_Time_Machine_A_{p}"
-            )
-            model.addConstr(
-                self.start_times[p, 2] + self.demand[p] * self.unit_production_time <= 
-                self.max_time_machine_B + big_M * (1 - quicksum(self.predecessor[q, p, 2] for q in range(1, self.num_parts + 3))),
-                name=f"Max_Time_Machine_B_{p}"
-            )
+        for m, max_time in zip(self.machines, self.max_times):
+            for p in range(1, self.num_parts + 1):
+                model.addConstr(
+                    self.start_times[p, m] + self.demand[p] * self.unit_production_time <= 
+                    max_time + big_M * (1 - quicksum(self.predecessor[q, p, m] for q in range(1, self.num_parts + len(self.machines) + 1))),
+                    name=f"Max_Time_Machine_{m}_{p}"
+                )
 
         # Cleaning time constraints
         for p in range(1, self.num_parts + 1):
@@ -141,7 +139,7 @@ class Optimizer():
                 next_part = job_list_sorted[i+1][0]
                 self.predecessor[prev_part, next_part, m].Start = 1
 
-        # 3) Now assign dummy → first job for each machine
+        # len(self.machines) + 1) Now assign dummy → first job for each machine
         dummy_1 = len(self.parts_colors) + 1  # Dummy for Machine 1
         dummy_2 = len(self.parts_colors) + 2  # Dummy for Machine 2
 
@@ -165,7 +163,7 @@ class Optimizer():
         model.setParam("IntFeasTol", 1e-9)
         model.setParam("Threads", 8)
         model.setParam("Seed", 12345)
-        model.setParam("BestObjStop", (self.num_colors - 1.5))
+        model.setParam("BestObjStop", (self.num_colors - len(self.machines) + 0.5))
         model.setParam("MIPGap", self.MIPGAP)
 
         if initial_solution is not None:
@@ -211,7 +209,7 @@ class Optimizer():
         return model
     
     def visualize(self):
-
+        # Calculate values for start and end times
         start_times_values = {
             (p, m): self.start_times[p, m].X
             for p in range(1, self.num_parts + 1)
@@ -220,24 +218,25 @@ class Optimizer():
 
         end_times_values = {
             (p, m): (self.start_times[p, m].X + self.demand[p] * self.unit_production_time)
-            if sum(self.predecessor[q, p, m].X for q in range(1, self.num_parts + 3)) == 1 else 0
+            if sum(self.predecessor[q, p, m].X for q in range(1, self.num_parts + len(self.machines) + 1)) == 1 else 0
             for p in range(1, self.num_parts + 1)
             for m in self.machines
         }
 
-        breaks = {
-            1: [(0, 0, 0)],  # Breaks for Machine 1
-            2: [(0, 0, 0)],  # Breaks for Machine 2
-        }
+        # Placeholder for breaks (adjust if needed for each machine)
+        breaks = {m: [(0, 0, 0)] for m in self.machines}
 
-        fig, axs = plt.subplots(2, 1, figsize=(22, 12), sharex=True)
+        num_machines = len(self.machines)
+        fig, axs = plt.subplots(num_machines, 1, figsize=(22, 6 * num_machines), sharex=True)
+        
+        if num_machines == 1:
+            axs = [axs]  # Ensure axs is iterable when there's only one machine
+        
+        global_max_time = max(max_time for max_time in self.max_times)
 
-        max_time_A = self.max_time_machine_A
-        max_time_B = self.max_time_machine_B
-
-        for m in self.machines:
-            ax = axs[m - 1] 
-            cumulative_shift = 0  #
+        for i, (m, max_time) in enumerate(zip(self.machines, self.max_times)):
+            ax = axs[i]
+            cumulative_shift = 0  
 
             sorted_parts = sorted(
                 [p for p in range(1, self.num_parts + 1)],
@@ -261,11 +260,9 @@ class Optimizer():
                 for break_start, break_end, shift_amount in breaks[m]:
                     if shifted_start < break_start < shifted_end:
                         ax.barh(p, break_start - shifted_start, left=shifted_start, color=part_color, edgecolor='black')
-
                         shifted_start = break_end + shift_amount
                         shifted_end += shift_amount
                         ax.barh(p, end - break_end, left=shifted_start, color=part_color, edgecolor='black')
-
                         cumulative_shift += shift_amount
                         break 
                     elif shifted_start >= break_end:
@@ -275,12 +272,8 @@ class Optimizer():
                 ax.barh(p, shifted_end - shifted_start, left=shifted_start, color=part_color, edgecolor='black')
                 ax.text((start + end) / 2, p, f'Type {p}', ha='center', va='center', color='white')
 
-            if m == 1:
-                ax.axvline(x=max_time_A, color='red', linestyle='--', alpha=0.8, linewidth=1.5, label="Max Time A")
-                ax.legend(loc='upper right')
-            elif m == 2:
-                ax.axvline(x=max_time_B, color='red', linestyle='--', alpha=0.8, linewidth=1.5, label="Max Time B")
-                ax.legend(loc='upper right')
+            ax.axvline(x=max_time, color='red', linestyle='--', alpha=0.8, linewidth=1.5, label=f"Max Time Machine {m}")
+            ax.legend(loc='upper right')
 
             ax.set_title(f"Machine {m} Schedule", fontsize=16)
             ax.set_ylabel("Product Type", fontsize=14)
@@ -289,10 +282,9 @@ class Optimizer():
             ax.grid(axis='x', linestyle='--', alpha=0.7)
 
         plt.xlabel("Time (seconds)", fontsize=14)
-        plt.xticks(np.arange(0, max_time_A, 4000))  
+        plt.xticks(np.arange(0, global_max_time, 4000))  
 
-        fig.suptitle("Optimal Production Schedule for Two Machines", fontsize=18)
+        fig.suptitle("Optimal Production Schedule for Machines", fontsize=18)
         plt.tight_layout(rect=[0, 0.03, 1, 0.95]) 
 
         plt.show()
-
