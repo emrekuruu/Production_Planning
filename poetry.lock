@@ -93,19 +93,6 @@ docs = ["ipython", "matplotlib", "numpydoc", "sphinx"]
 tests = ["pytest", "pytest-cov", "pytest-xdist"]
 
 [[package]]
-name = "et-xmlfile"
-version = "2.0.0"
-description = "An implementation of lxml.xmlfile for the standard library"
-optional = false
-python-versions = ">=3.8"
-groups = ["main"]
-markers = "python_version == \"3.11\" or python_version >= \"3.12\""
-files = [
-    {file = "et_xmlfile-2.0.0-py3-none-any.whl", hash = "sha256:7a91720bc756843502c3b7504c77b8fe44217c85c537d85037f0f536151b2caa"},
-    {file = "et_xmlfile-2.0.0.tar.gz", hash = "sha256:dab3f4764309081ce75662649be815c4c9081e88f0837825f90fd28317d4da54"},
-]
-
-[[package]]
 name = "fonttools"
 version = "4.56.0"
 description = "Tools to manipulate font files"
@@ -431,22 +418,6 @@ files = [
 ]
 
 [[package]]
-name = "openpyxl"
-version = "3.1.5"
-description = "A Python library to read/write Excel 2010 xlsx/xlsm files"
-optional = false
-python-versions = ">=3.8"
-groups = ["main"]
-markers = "python_version == \"3.11\" or python_version >= \"3.12\""
-files = [
-    {file = "openpyxl-3.1.5-py2.py3-none-any.whl", hash = "sha256:5282c12b107bffeef825f4617dc029afaf41d0ea60823bbb665ef3079dc79de2"},
-    {file = "openpyxl-3.1.5.tar.gz", hash = "sha256:cf0e3cf56142039133628b5acffe8ef0c12bc902d2aadd3e0fe5878dc08d1050"},
-]
-
-[package.dependencies]
-et-xmlfile = "*"
-
-[[package]]
 name = "packaging"
 version = "24.2"
 description = "Core utilities for Python packages"
@@ -637,6 +608,69 @@ typing = ["typing-extensions"]
 xmp = ["defusedxml"]
 
 [[package]]
+name = "ply"
+version = "3.11"
+description = "Python Lex & Yacc"
+optional = false
+python-versions = "*"
+groups = ["main"]
+markers = "python_version == \"3.11\" or python_version >= \"3.12\""
+files = [
+    {file = "ply-3.11-py2.py3-none-any.whl", hash = "sha256:096f9b8350b65ebd2fd1346b12452efe5b9607f7482813ffca50c22722a807ce"},
+    {file = "ply-3.11.tar.gz", hash = "sha256:00c7c1aaa88358b9c765b6d3000c6eec0ba42abca5351b095321aef446081da3"},
+]
+
+[[package]]
+name = "pyomo"
+version = "6.8.2"
+description = "Pyomo: Python Optimization Modeling Objects"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+markers = "python_version == \"3.11\" or python_version >= \"3.12\""
+files = [
+    {file = "Pyomo-6.8.2-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:1e6112e391d603add97be45856103db915a099ad403677f9064c7ceeae552420"},
+    {file = "Pyomo-6.8.2-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:f1dfcb8af79c0393cd8cd0a2e24576690c0723e8b335c29597edb898d45a53c7"},
+    {file = "Pyomo-6.8.2-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:cbe2dd1d093f0e4b4653f0bdf18a1399a94c7668dcc7f0ddc1066a0bc25466c1"},
+    {file = "Pyomo-6.8.2-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:1c59503ccab6e7983b3ca5361772b851fc17c3e0ab85636234eafa9c4b7169f0"},
+    {file = "Pyomo-6.8.2-cp310-cp310-win_amd64.whl", hash = "sha256:fce716db0fbdfed4c142060b9746028b3cda7620a5fcec49059f51869aff82f2"},
+    {file = "Pyomo-6.8.2-cp310-cp310-win_arm64.whl", hash = "sha256:28a91ab31577e578577fb4401779ec4c0836bb68137bb45a5f73f2921b555f9a"},
+    {file = "Pyomo-6.8.2-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:f0b74c2fecdf980faa0ae414fa01c52c2659704d681cd120538d005f5476a819"},
+    {file = "Pyomo-6.8.2-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:041d64b51f8e031b3dc129166019b72eda3cf868f6c1633a78c8cc7694a44b5e"},
+    {file = "Pyomo-6.8.2-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:343f0e9fb28ee86510b16aa362445ff2f4afc296a18a50f6227a5452af21adca"},
+    {file = "Pyomo-6.8.2-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:ab4c9155533b19469ff86faf84b89eaece612f47661c6e99082bfc67b8d7ce84"},
+    {file = "Pyomo-6.8.2-cp312-cp312-macosx_10_13_x86_64.whl", hash = "sha256:cd6dba83c33eb77320caaf6379b5e3149e670120b352d114a4c8508981f4eddf"},
+    {file = "Pyomo-6.8.2-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:c91aa84c46deb1af8b802dfb35e4de0b8bb322e7bf0daf7c82b8430d512cbc98"},
+    {file = "Pyomo-6.8.2-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:bad42b369b08c0181af54e57db74e23f9e58e18be23aa0881fac5be8e2149e32"},
+    {file = "Pyomo-6.8.2-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:35a6956b6128106366fd8f0ed86987289d962eaf084517e25419f1c6dec4f8a5"},
+    {file = "Pyomo-6.8.2-cp313-cp313-macosx_10_13_x86_64.whl", hash = "sha256:462f304ce6ab44b9a1574d3c925199211568e59ea1aa05c5278aa67c6f56dd01"},
+    {file = "Pyomo-6.8.2-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:2d3ad704366f6b41e96efdf0a5ce42bfe97aa17b4fed4fda3d265651d04cee2e"},
+    {file = "Pyomo-6.8.2-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:54cabaa006d8743ebbefc7138fd036c3e0bbee793273e6847a363f248947a613"},
+    {file = "Pyomo-6.8.2-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:dd58d5d52e054e51fed1d5ff1937fb65fe77c8dad2d6b8b6a74c622c2eae0508"},
+    {file = "Pyomo-6.8.2-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:d455df20c5b909d1a96ea5f9bf25f4aff9803e1b6e72514b0b94d6070aa6eae6"},
+    {file = "Pyomo-6.8.2-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:6fc03273ca1abe54ba00cce9df1754f55e48e8a87bc3403bf050f0edb29d6546"},
+    {file = "Pyomo-6.8.2-cp38-cp38-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:ef6be62653c7f0449ffa3a0215b7e878d534fa6fb38fc4cb817e268956da4cd2"},
+    {file = "Pyomo-6.8.2-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:34e51f81fb5a16366f49c4c13fbbccc3a9d8d3dec76f777cf7d6ba8bc51e6178"},
+    {file = "Pyomo-6.8.2-cp38-cp38-win_amd64.whl", hash = "sha256:24bdef6fc9de8dee979a584a1a94c62a404481dd47f2f0561a42c5faee517fcc"},
+    {file = "Pyomo-6.8.2-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:ff1461cd6da68c6ac5d8b98c2c2e4bee0eee5937b6e5cfb37e1fbe252f851990"},
+    {file = "Pyomo-6.8.2-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:8559c466e6d698e06869e3fb382b4cb765cd3de412bdf58ca7189cf346c4caca"},
+    {file = "Pyomo-6.8.2-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:e2e761cd596f3815e22d6d16631d34421b4f21caa612fcb445e4cba1b520e368"},
+    {file = "Pyomo-6.8.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:00ebd4c7c07977eb2429b98ce49ed1f8690c9ddf407d2bd5003f4e8cb515b0f0"},
+    {file = "Pyomo-6.8.2-cp39-cp39-win_amd64.whl", hash = "sha256:26831ab16c310e7e3156d4198cb47ecab60021ca10d6bd5a4abba6818e646d22"},
+    {file = "Pyomo-6.8.2-cp39-cp39-win_arm64.whl", hash = "sha256:daa23505640af37c02b25fb9bc59ad8765eaba9f67cebfd0776c8597f6b4e090"},
+    {file = "Pyomo-6.8.2-py3-none-any.whl", hash = "sha256:7ea0790289da22964d1c2b37ca9eafda55373c84755db4c52c08fad5cde4ccd8"},
+    {file = "Pyomo-6.8.2.tar.gz", hash = "sha256:40d8f7b216ad1602bb254f4296591608dd94fe2c961dc1e63ca6b84fb397bed6"},
+]
+
+[package.dependencies]
+ply = "*"
+
+[package.extras]
+docs = ["Sphinx (>4)", "numpy", "scipy", "sphinx-copybutton", "sphinx-jinja2-compat (>=0.1.1)", "sphinx-rtd-theme (>0.5)", "sphinx-toolbox (>=2.16.0)", "sphinxcontrib-jsmath", "sphinxcontrib-napoleon"]
+optional = ["casadi", "dill", "ipython", "linear-tree", "matplotlib (>=3.6.0,!=3.6.1)", "networkx", "networkx (<3.2)", "numdifftools", "numpy", "openpyxl", "pandas", "pint", "plotly", "python-louvain", "pywin32", "pyyaml", "qtconsole", "scipy", "seaborn", "sympy", "xlrd", "z3-solver"]
+tests = ["coverage", "parameterized", "pybind11", "pytest", "pytest-parallel"]
+
+[[package]]
 name = "pyparsing"
 version = "3.2.1"
 description = "pyparsing module - Classes and methods to define and execute parsing grammars"
@@ -733,4 +767,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11"
-content-hash = "b76a60a88db64ab73ef84e2f4830fc183617f6ed06dec76c9dc7bc4b4db2f117"
+content-hash = "d00f216c401fce7589a6ece9868835bcd83a6549408782940bd24e72216293ed"
